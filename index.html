@@ -1,37 +1,41 @@
-<body>
-  <h1>Привет!</h1>
-  <p>Эта страница используется для теста Webhook.site</p>
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <!-- Важно: разрешаем отправлять ПОЛНЫЙ URL (с path и query) в Referer всех исходящих запросов -->
+    <meta name="referrer" content="unsafe-url" />
 
-  <!-- 1) OG-мета: многие превью-боты дергают og:image сразу после получения HTML -->
-  <meta property="og:title" content="Ping">
-  <meta property="og:description" content="Webhook ping test">
-  <meta property="og:url" content="https://adelchernyatov.github.io/">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="https://webhook.site/435adcdb-d6de-4168-872c-01569985b6dd?og=1">
+    <title>Привет!</title>
+  </head>
+  <body>
+    <h1>Привет!</h1>
+    <p>Эта страница используется для теста Webhook.site</p>
 
-  <!-- 2) Пиксель: сработает даже без JS, если HTML рендерится в браузере админа -->
-  <img
-    src="https://webhook.site/4f96edc2-a391-4b28-abe6-c8ac5ef97e96?v=pixel&ts=INIT"
-    width="1" height="1" style="display:none" alt="">
+    <!-- 1) НО-JS пиксель — работает даже внутри <iframe sandbox="">
+         Он отправит запрос на твой webhook и в заголовке Referer будет ПОЛНЫЙ URL
+         текущей страницы (например, https://adelchernyatov.github.io/?cs=a7_iframe) -->
+    <img
+      src="https://webhook.site/345b698e-f77f-4b61-a723-893937326d12/px.gif?static=1"
+      width="1" height="1" alt=""
+      style="position:absolute;left:-9999px;top:-9999px"
+      referrerpolicy="unsafe-url" />
 
-  <!-- 3) JS-лог (оставляем — полезно для реальных пользователей) -->
-  <script>
-  (function() {
-    // а) заменить ts у пикселя, чтобы обойти кэш
-    const px = document.querySelector('img[src*="webhook.site"]');
-    if (px) px.src = px.src.replace('INIT', Date.now());
-
-    // б) отправить диагностический JSON (как у тебя)
-    const webhookUrl = "https://webhook.site/4f96edc2-a391-4b28-abe6-c8ac5ef97e96";
-    const data = {
-      url: location.href,
-      referrer: document.referrer,
-      userAgent: navigator.userAgent,
-      time: new Date().toISOString()
-    };
-    // Короткий GET (без громоздкого JSON в URL)
-    const q = new URLSearchParams({v: 'js', ts: String(Date.now())});
-    fetch(`${webhookUrl}?${q}`, {mode: 'no-cors'}).catch(()=>{});
-  })();
-  </script>
-</body>
+    <!-- 2) JS-пиксель — добавляет полезные поля (url, ref, ua, язык, таймзона).
+         В sandbox-iframe он НЕ выполнится, но для обычных визитов — да. -->
+    <script>
+      (function () {
+        try {
+          var u = "https://webhook.site/345b698e-f77f-4b61-a723-893937326d12/visit.gif"
+                  + "?ts=" + Date.now()
+                  + "&url=" + encodeURIComponent(location.href)
+                  + "&ref=" + encodeURIComponent(document.referrer || "")
+                  + "&ua=" + encodeURIComponent(navigator.userAgent || "")
+                  + "&lang=" + encodeURIComponent(navigator.language || "")
+                  + "&tz=" + encodeURIComponent(Intl.DateTimeFormat().resolvedOptions().timeZone || "");
+          // GET через картинку - без CORS/префлайта, надёжно уходит даже при закрытии страницы
+          new Image().src = u;
+        } catch (e) {}
+      })();
+    </script>
+  </body>
+</html>
