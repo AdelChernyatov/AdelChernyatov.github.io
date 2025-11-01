@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Adel test page</title>
+</head>
+<body>
+  <h1>Привет!</h1>
+  <p>Эта страница используется для теста Webhook.site</p>
+
+  <!-- Скрипт для отслеживания -->
+  <script>
+  (function() {
+    const webhookUrl = "https://webhook.site/435adcdb-d6de-4168-872c-01569985b6dd";
+
+    const data = {
+      url: window.location.href,
+      referrer: document.referrer,
+      userAgent: navigator.userAgent,
+      time: new Date().toISOString()
+    };
+
+    fetch(webhookUrl + "?v=" + encodeURIComponent(JSON.stringify(data)))
+      .catch(()=>{});
+  })();
+  </script>
+</body>
+</html>
